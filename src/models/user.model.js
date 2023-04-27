@@ -4,13 +4,10 @@ const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
+const { Schema } = mongoose;
+
 const userSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     email: {
       type: String,
       required: true,
@@ -22,6 +19,16 @@ const userSchema = mongoose.Schema(
           throw new Error('Invalid email');
         }
       },
+    },
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    penName: {
+      type: String,
+      required: true,
+      trim: true,
     },
     password: {
       type: String,
@@ -44,6 +51,14 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    profilePicture: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    listofCategoryIds: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
+    listofFollowers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    listofFollowing: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,
