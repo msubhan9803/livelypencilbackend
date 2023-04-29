@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema(
   {
     email: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
       trim: true,
       lowercase: true,
@@ -22,17 +22,17 @@ const userSchema = mongoose.Schema(
     },
     fullName: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
     penName: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
     password: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
       minlength: 8,
       validate(value) {
@@ -53,7 +53,7 @@ const userSchema = mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
     listofCategoryIds: [{ type: Schema.Types.ObjectId, ref: 'Category' }],

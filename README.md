@@ -40,3 +40,13 @@ Page media modal:
 - id
 - s3 url
 - media size -- full, portrait, square
+
+
+Authentication flow:
+
+- User can register
+- A verification email will be sent with otp
+- Verify user with otp
+- User can login
+- User can forget password
+- User can reset password
