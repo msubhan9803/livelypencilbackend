@@ -6,6 +6,7 @@ const userService = require('./user.service');
 const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
+const { getUniqueOneTimePassword } = require('../utils/helper');
 
 /**
  * Generate token
@@ -49,11 +50,11 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * Verify token and return token doc (or throw an error if it is not valid)
  * @param {string} token
  * @param {string} type
+ * @param {string} userId
  * @returns {Promise<Token>}
  */
-const verifyToken = async (token, type) => {
-  const payload = jwt.verify(token, config.jwt.secret);
-  const tokenDoc = await Token.findOne({ token, type, user: payload.sub, blacklisted: false });
+const verifyToken = async (token, type, userId) => {
+  const tokenDoc = await Token.findOne({ token, type, user: userId, blacklisted: false });
   if (!tokenDoc) {
     throw new Error('Token not found');
   }
@@ -108,7 +109,8 @@ const generateResetPasswordToken = async (email) => {
  */
 const generateVerifyEmailToken = async (user) => {
   const expires = moment().add(config.jwt.verifyEmailExpirationMinutes, 'minutes');
-  const verifyEmailToken = generateToken(user._id, expires, tokenTypes.VERIFY_EMAIL);
+  // const verifyEmailToken = generateToken(user._id, expires, tokenTypes.VERIFY_EMAIL);
+  const verifyEmailToken = getUniqueOneTimePassword();
   await saveToken(verifyEmailToken, user._id, expires, tokenTypes.VERIFY_EMAIL);
   return verifyEmailToken;
 };

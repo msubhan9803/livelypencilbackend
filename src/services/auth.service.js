@@ -74,15 +74,13 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 /**
  * Verify email
  * @param {string} verifyEmailToken
+ * @param {User} user
  * @returns {Promise}
  */
-const verifyEmail = async (verifyEmailToken) => {
+const verifyEmail = async (verifyEmailToken, user) => {
   try {
-    const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
-    const user = await userService.getUserById(verifyEmailTokenDoc.user);
-    if (!user) {
-      throw new Error();
-    }
+    await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL, user.id);
+
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
   } catch (error) {

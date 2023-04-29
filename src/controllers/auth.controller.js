@@ -10,6 +10,11 @@ const register = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
+const verifyEmail = catchAsync(async (req, res) => {
+  await authService.verifyEmail(req.query.token, req.user);
+  res.status(httpStatus.NO_CONTENT).send('Email successfully verified');
+});
+
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
@@ -41,11 +46,6 @@ const resetPassword = catchAsync(async (req, res) => {
 const sendVerificationEmail = catchAsync(async (req, res) => {
   const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
   await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
-  res.status(httpStatus.NO_CONTENT).send();
-});
-
-const verifyEmail = catchAsync(async (req, res) => {
-  await authService.verifyEmail(req.query.token);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
